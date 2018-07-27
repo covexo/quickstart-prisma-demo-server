@@ -1,0 +1,49 @@
+name: prisma-mysql
+containers:
+  - name: prisma
+    image: 'prismagraphql/prisma:1.12'
+    runtimeOptions:
+      cmd: ''
+      workDir: ''
+      entryPoint: /app/start.sh
+    env:
+      PRISMA_CONFIG: |
+        port: 4466
+        databases:
+          default:
+            connector: mysql 
+            host: localhost
+            port: 3306
+            user: root
+            password: password
+            migrations: true
+  - name: mysql
+    image: 'mysql:5.7'
+    runtimeOptions:
+      cmd: 'mysqld '
+      workDir: ''
+      entryPoint: docker-entrypoint.sh
+    env:
+      MYSQL_ROOT_PASSWORD: password
+    persistentFolders:
+      - name: config
+        localSubPath: ./config/mysql
+        containerPath: /etc/mysql
+      - name: folder-1
+        localSubPath: null
+        containerPath: /var/lib/mysql
+  - name: dev-container
+    image: 'covexo/quickstart-prisma:latest'
+    runtimeOptions:
+      cmd: deploy
+      workDir: /app
+      entryPoint: prisma
+    initScript: |
+      #!/bin/bash
+      npm install
+    env:
+      NODE_ENV: dev
+    persistentFolders:
+      - name: source-code
+        localSubPath: ./app
+        containerPath: /app
