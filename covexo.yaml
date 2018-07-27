@@ -35,9 +35,9 @@ containers:
   - name: dev-container
     image: 'covexo/quickstart-prisma:latest'
     runtimeOptions:
-      cmd: deploy
+      cmd: node
       workDir: /app
-      entryPoint: prisma
+      entryPoint: ''
     initScript: |
       #!/bin/bash
       npm install
